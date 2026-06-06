@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*  */
+
+@import "tailwindcss";
+/* Global Styling */
+
+
+:root {
+  --color-primary: #2563EB;
+  --color-primary-dark: #1E3A8A;
+
+  --color-secondary: #DC2626;
+  --color-secondary-light: #EF4444;
+
+  --color-bg: #F9FAFB;
+  --color-white: #FFFFFF;
+  --color-dark: #111827;
+  --color-gray: #6B7280;
+
+  --color-border: #E5E7EB;
+  --color-shadow: rgba(0, 0, 0, 0.05);
+
+  --gradient-main: linear-gradient(90deg, #2563EB, #DC2626);
+
+  --font-main: 'Poppins', sans-serif;
+
+  --radius: 12px;
+  --transition: all 0.3s ease;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-dark);
+  line-height: 1.6;
+}
+
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+}
+
+
+.btn-secondary {
+  background: var(--color-secondary) !important;
+  color: var(--color-white) !important;
+  padding: 10px 20px;
+  border-radius: var(--radius) !important;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition) !important;
+}
+
+.btn-secondary:hover {
+  background: var(--color-secondary-light);
+}
+
+
+.card {
+  background: var(--color-white);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 20px var(--color-shadow);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+
+.section {
+  padding: 60px 20px;
+}
+
+
+.gradient-text {
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+.border-default {
+  border: 1px solid var(--color-border);
+}
+
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.btn-secondary:hover {
+  background: var(--color-secondary-light) !important;
+}
