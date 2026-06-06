@@ -1,4 +1,4 @@
-import ServicesOverviewImage from '../../assets/servicesOverview.png';
+import ServicesOverviewImage from '../../assets/images/servicesOverview.png';
 
 
 

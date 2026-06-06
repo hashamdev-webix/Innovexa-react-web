@@ -1,5 +1,5 @@
 
-import GetQouteImage from "../../assets/GetQoute.png";
+import GetQouteImage from "../../assets/images/GetQoute.png";
 
 
 

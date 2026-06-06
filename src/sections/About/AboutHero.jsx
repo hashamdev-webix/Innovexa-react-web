@@ -1,4 +1,4 @@
-import AboutHeroImage from '../../assets/AboutHeroImage.png';
+import AboutHeroImage from '../../assets/images/AboutHeroImage.png';
 
 
 

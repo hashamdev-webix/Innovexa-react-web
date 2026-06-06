@@ -1,6 +1,6 @@
 
 
-import DashbordImage from '../../assets/DashbordImage.png';
+import DashbordImage from '../../assets/images/DashbordImage.png';
 
 
 

@@ -1,4 +1,4 @@
-import BussinessSupportImage from "../../assets/BussinessSupport.png";
+import BussinessSupportImage from "../../assets/images/BussinessSupport.png";
 
 
 

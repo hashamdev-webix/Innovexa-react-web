@@ -1,6 +1,6 @@
 
 
-import OurVissionImage from "../../assets/OurVissionImage.png";
+import OurVissionImage from "../../assets/images/OurVissionImage.png";
 
 export default function OurVision() {
   return (

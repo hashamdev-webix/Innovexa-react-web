@@ -1,5 +1,5 @@
 
-import ServicesHero from '../../assets/HeroSecttiomServices.png';
+import ServicesHero from '../../assets/images/ServicesHero.png';
 
 
 

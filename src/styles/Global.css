@@ -97,7 +97,6 @@ body {
 
 .gradient-text {
   background: var(--gradient-main);
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

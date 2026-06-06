@@ -2,7 +2,7 @@
 
 import { useNavigate } from "react-router-dom";
 import Card from "../../components/Card";
-import { Children } from "react";
+
 
 function Industries() {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ function Industries() {
             Industries Innovexa Serves
           </h2>
 
-          <p className="mt-4 text-[var(--color-gray)] max-w-3xl mx-auto">
+          <p className="mt-4  max-w-3xl mx-auto">
             Built for businesses that rely on stable technology but do
             not have dedicated internal IT teams.
           </p>

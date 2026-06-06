@@ -1,4 +1,4 @@
-import securityImage from '../../assets/securityPlatform.png';
+import securityImage from '../../assets/images/securityPlatform.png';
 
 
 

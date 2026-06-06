@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import IndustriesHeroImage from '../../assets/IndustriesHeroImage.png';
+import IndustriesHeroImage from '../../assets/images/IndustriesHeroImage.png';
 import { Button } from '../../components/Button';
 
 

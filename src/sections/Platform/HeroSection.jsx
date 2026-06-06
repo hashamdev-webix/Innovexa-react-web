@@ -1,4 +1,4 @@
-import heroimage from '../../assets/platformhero.png';
+import heroimage from '../../assets/images/platformhero.png';
 import { useNavigate } from "react-router-dom";
 import { Button } from '../../components/Button';
 

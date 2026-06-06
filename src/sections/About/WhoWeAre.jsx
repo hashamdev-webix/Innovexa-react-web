@@ -1,5 +1,5 @@
 
-import WhoWeAreImage from '../../assets/WhoWEAreImage.png';
+import WhoWeAreImage from '../../assets/images/WhoWEAreImage.png';
 
 
 

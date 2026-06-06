@@ -1,5 +1,5 @@
 
-import LeaderShipImage from "../../assets/LeaderShipImage.png";
+import LeaderShipImage from "../../assets/images/LeaderShipImage.png";
 
 
 

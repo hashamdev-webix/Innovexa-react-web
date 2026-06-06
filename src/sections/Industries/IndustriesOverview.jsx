@@ -1,6 +1,6 @@
 
 
-import IndustriesOverviewImage from '../../assets/IndustriesOverview.png';
+import IndustriesOverviewImage from '../../assets/images/IndustriesOverview.png';
 
 
 

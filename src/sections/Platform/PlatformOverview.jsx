@@ -1,6 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
-import overviewImage from '../../assets/platform-hero.png';
+import overviewImage from '../../assets/images/platform-hero.png';
 import { Button } from '../../components/Button';
 
 

@@ -1,4 +1,4 @@
-// import { Map, Marker } from "@vis.gl/react-google-maps";
+
 
 export default function MapSection() {
   return (
@@ -14,13 +14,12 @@ export default function MapSection() {
         <div className="card">
           <div className="h-[400px] w-full rounded-xl overflow-hidden">
 
-            <Map
-              defaultCenter={{ lat: 30.3753, lng: 69.3451 }} // Pakistan
-              defaultZoom={5}
-              style={{ width: "100%", height: "100%" }}
+            <div
+          
+              className="h-full w-full text-center flex items-center justify-center text-gray-500"
             >
-              <Marker position={{ lat: 30.3753, lng: 69.3451 }} />
-            </Map>
+             Map
+            </div>
 
           </div>
         </div>

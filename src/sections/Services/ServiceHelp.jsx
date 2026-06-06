@@ -1,5 +1,5 @@
 
-import BusinessBenefitsImage from '../../assets/BussinessBenifites.png';  
+import BusinessBenefitsImage from '../../assets/images/BussinessBenifites.png';  
 
 
 

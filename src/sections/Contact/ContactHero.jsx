@@ -1,4 +1,4 @@
-import ContactImage from "../../assets/ContactImage.png";
+import ContactImage from "../../assets/images/ContactImage.png";
 
 
 

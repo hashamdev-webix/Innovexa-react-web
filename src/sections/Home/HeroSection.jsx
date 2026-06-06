@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import heroimgae from '../../assets/innovexa_hero_banner.svg';
+import heroimgae from '../../assets/images/innovexa_hero_banner.svg';
 export default function Hero() {
 const navigate=useNavigate();
 
   
   return (
-    <section className="w-full min-h-screen flex items-center  bg-white px-10 md:px-16">
+    <section className="w-full min-h-screen flex items-center  bg-white px-10 md:px-16 ">
       
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
 

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/images/logo.jpeg";
 
 const Navbar = () => {
+    const Navigate=use
     const [menuOpen, setMenuOpen] = useState(false);
 
     const links = [
@@ -14,7 +15,7 @@ const Navbar = () => {
     ];
 
     return (
-        <header className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-[var(--color-border)]">
+        <header className="top-0 left-0 w-full z-50 sticky md:sticky   bg-white/90 backdrop-blur-md border-b border-[var(--color-border)]">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="h-20 flex items-center justify-between">
 
@@ -80,7 +81,7 @@ const Navbar = () => {
 
                             <Link
                                 to="/contact"
-                                onClick={() => setMenuOpen(false)}
+                              onClick={()=>{Navigate('/contact')}}
                                 className="btn-secondary border border-[var(--color-border)] py-3 rounded-xl text-center text-[var(--color-dark)] "
                             >
                                 Contact Us

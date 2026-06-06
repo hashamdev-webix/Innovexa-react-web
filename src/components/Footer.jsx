@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo.jpeg';
+import logo from '../assets/images/logo.jpeg';
+import  FaFacebookF  from '../assets/icons/facebook.png';
+import  insta  from '../assets/icons/instagram.png';
+import  twiter from '../assets/icons/twitter.png';
+
 function Footer() {
      const links = [
         { name: "Home", path: "/" },
@@ -87,23 +91,23 @@ function Footer() {
               <div className="flex gap-3 mt-6">
                 <a
                   href="#"
-                  className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-110 transition"
+                  className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition"
                 >
-                  F
+                  <img src={FaFacebookF} alt="Facebook" />
                 </a>
 
                 <a
                   href="#"
-                  className="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center hover:scale-110 transition"
+                  className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition"
                 >
-                  I
+                  <img src={insta} alt="" />
                 </a>
 
                 <a
                   href="#"
-                  className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center hover:scale-110 transition"
+                  className="w-10 h-10 rounded-full  flex items-center justify-center hover:scale-110 transition"
                 >
-                  X
+                  <img src={twiter} alt="" />
                 </a>
               </div>
             </div>
