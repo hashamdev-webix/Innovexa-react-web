@@ -90,21 +90,21 @@ function Footer() {
               {/* Social */}
               <div className="flex gap-3 mt-6">
                 <a
-                  href="#"
+                  href="https://facebook.com/innovexasoftwares"
                   className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition"
                 >
                   <img src={FaFacebookF} alt="Facebook" />
                 </a>
 
                 <a
-                  href="#"
+                  href="https://instagram.com/innovexasoftwares"
                   className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition"
                 >
                   <img src={insta} alt="" />
                 </a>
 
                 <a
-                  href="#"
+                  href="https://x.com/innovexasoftwares"
                   className="w-10 h-10 rounded-full  flex items-center justify-center hover:scale-110 transition"
                 >
                   <img src={twiter} alt="" />
