@@ -1,6 +1,8 @@
 
 import BusinessBenefitsImage from '../../assets/images/BussinessBenifites.png';  
-
+import Aos from "aos";
+import "aos/dist/aos.css"
+import { useEffect } from 'react';
 
 
 
@@ -13,13 +15,16 @@ const benefits = [
 ];
 
 export default function ServiceHelp() {
+  useEffect(()=>{
+    Aos.init({duration:1000,once:true})
+  },[])
   return (
     <section className="section bg-white">
 
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16" >
 
         {/* LEFT CONTENT */}
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-left">
 
           <span className="text-blue-600 font-semibold">
             Business Benefits
@@ -57,7 +62,7 @@ export default function ServiceHelp() {
         </div>
 
         {/* RIGHT IMAGE */}
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-right">
 
           <div className="bg-gray-100 rounded-2xl p-6 shadow-lg">
 

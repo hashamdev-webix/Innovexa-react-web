@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+import { Button } from "../../components/Button";
+
 export default function AboutCTA() {
+  const navigate=useNavigate()
   return (
     <section className="section">
 
@@ -15,13 +19,18 @@ export default function AboutCTA() {
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
 
-          <button className="btn-primary">
-            Get a Quote
-          </button>
+       
+          <Button 
+          className="btn-primary"
+          children="Get a Quote"
+          omnClick={()=>{navigate('/quote')}}
+          />
 
-          <button className="btn-secondary">
-            Contact Us
-          </button>
+         <Button 
+          className="btn-secondary"
+          children="Contact Us"
+          omnClick={()=>{navigate('/contact')}}
+          />
 
         </div>
 

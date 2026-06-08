@@ -1,3 +1,17 @@
+import Aos from "aos";
+import 'aos/dist/aos.css'
+import { useEffect } from "react";
+
+
+
+
+
+
+
+
+
+
+
 const industries = [
   {
     title: "Dental Clinics",
@@ -26,6 +40,9 @@ const industries = [
 ];
 
 export default function IndustriesServe() {
+  useEffect(()=>{
+    Aos.init({duration:1000,once:true})
+  },[])
   return (
     <section className="section">
 
@@ -48,7 +65,7 @@ export default function IndustriesServe() {
 
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="fade-down">
 
           {industries.map((industry) => (
             <div key={industry.title} className="card">

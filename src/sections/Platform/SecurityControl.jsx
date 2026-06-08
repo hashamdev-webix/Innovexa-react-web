@@ -1,11 +1,18 @@
 import securityImage from '../../assets/images/securityPlatform.png';
+import Aos from  "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
 
 
 
 const Security = () => {
+  useEffect(() => {
+    Aos.init({ duration: 1000, once: true });
+  }, []);
+
   return (
     <section className="section">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center" data-aos="fade-up">
 
         <div>
           <h2 className="text-4xl font-bold mb-6">

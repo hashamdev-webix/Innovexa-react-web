@@ -1,3 +1,11 @@
+import Aos from "aos";
+import 'aos/dist/aos.css'
+import { useEffect } from "react";
+
+
+
+
+
 const reasons = [
   {
     title: "AI-Powered Support",
@@ -18,6 +26,9 @@ const reasons = [
 ];
 
 export default function WhyChoose() {
+  useEffect(()=>{
+    Aos.init({duration:1000,once:true})
+  },[])
   return (
     <section className="section bg-white">
 
@@ -29,7 +40,7 @@ export default function WhyChoose() {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" data-aos="fade-down">
 
           {reasons.map((reason) => (
             <div key={reason.title} className="card">

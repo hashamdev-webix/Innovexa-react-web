@@ -1,3 +1,12 @@
+import Aos from  "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
+
+
+
+
+
+
 const modules = [
   "AI Troubleshooting Chatbot",
   "SaaS Monitoring Dashboard",
@@ -10,6 +19,10 @@ const modules = [
 ];
 
 const PlatformModules = () => {
+  useEffect(() => {
+    Aos.init({ duration: 1000, once: true });
+  }, []);
+  
   return (
     <section className="section">
       <div className="max-w-7xl mx-auto">
@@ -18,7 +31,7 @@ const PlatformModules = () => {
           Platform Modules
         </h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" data-aos="fade-up">
 
           {modules.map((item) => (
             <div key={item} className="card">

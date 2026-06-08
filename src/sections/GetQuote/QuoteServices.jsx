@@ -1,3 +1,13 @@
+import Aos from "aos";
+import 'aos/dist/aos.css';
+import { useEffect } from "react";
+
+
+
+
+
+
+
 const services = [
   {
     title: "AI IT Troubleshooting",
@@ -26,6 +36,9 @@ const services = [
 ];
 
 export default function QuoteServices() {
+  useEffect(()=>{
+    Aos.init({duration:1000,once:true})
+  },[])
   return (
     <section className="section">
 
@@ -43,7 +56,7 @@ export default function QuoteServices() {
 
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" dat-aos='fade-down'>
 
           {services.map((service) => (
             <div key={service.title} className="card">

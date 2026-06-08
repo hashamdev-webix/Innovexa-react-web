@@ -1,8 +1,14 @@
 
 import Card from "../../components/Card";
 import { useNavigate } from "react-router-dom";
-
+import Aos from  "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
 function ServicesSection() {
+  useEffect(() => {
+    Aos.init({ duration: 1000, once: true });
+  }, []);
+
   const navigate = useNavigate()
   const services = [
     {
@@ -43,7 +49,7 @@ function ServicesSection() {
 
         <div className="text-center mb-10 lg:mb-14">
 
-          <h2
+          <h2  data-aos="fade-up"
             className="
         gradient-text
         font-bold
@@ -55,7 +61,7 @@ function ServicesSection() {
             What Innovexa Helps Businesses Manage
           </h2>
 
-          <p
+          <p  data-aos="fade-up"
             className="
         mt-4
         max-w-3xl
@@ -88,6 +94,7 @@ function ServicesSection() {
               description={service.description}
               onClick={() => navigate('/quote')}
               children="Get a Quote"
+             
             />
           ))}
         </div>

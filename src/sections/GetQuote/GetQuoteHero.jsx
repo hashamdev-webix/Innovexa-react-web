@@ -2,10 +2,15 @@
 import GetQouteImage from "../../assets/images/GetQoute.png";
 import { Button } from "../../components/Button";
 import { useNavigate } from "react-router-dom";
-
+import Aos from 'aos';
+import 'aos/dist/aos.css'
+import { useEffect } from "react";
 
 
 export default function GetQuoteHero() {
+    useEffect(()=>{
+        Aos.init({duration:1000,once:true})
+    },[])
     const navigate=useNavigate();
     return (
         <>
@@ -14,7 +19,7 @@ export default function GetQuoteHero() {
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
 
                     {/* LEFT */}
-                    <div className="flex-1">
+                    <div className="flex-1" data-aos="fade-left">
 
                         <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                             Get a Quote for AI-Powered IT Support
@@ -53,7 +58,7 @@ export default function GetQuoteHero() {
                     </div>
 
                     {/* RIGHT */}
-                    <div className="flex-1">
+                    <div className="flex-1" data-aos="fade-right">
 
                         <div className="card">
 

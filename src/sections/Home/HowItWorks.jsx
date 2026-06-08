@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
-
+import Aos from  "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
 function HowItWorks() {
+  useEffect(() => {
+    Aos.init({ duration: 1000, once: true });
+  }
+  , []);
   const navigate=useNavigate();
   const steps = [
     "IT Issue Occurs",
@@ -16,7 +22,7 @@ function HowItWorks() {
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <div className="text-center mb-10 lg:mb-14">
-      <h2
+      <h2 data-aos="fade-down"
         className="
         gradient-text
         font-bold
@@ -29,7 +35,7 @@ function HowItWorks() {
       </h2>
     </div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6" data-aos="fade-up">
 
       {steps.map((step, index) => (
         <div key={index} className="relative">

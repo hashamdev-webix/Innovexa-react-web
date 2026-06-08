@@ -1,10 +1,16 @@
 import heroimage from '../../assets/images/platformhero.png';
 import { useNavigate } from "react-router-dom";
 import { Button } from '../../components/Button';
+import Aos from  "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
 
 
 
 export default function Hero() {
+  useEffect(() => {
+    Aos.init({ duration: 1000, once: true });
+  }, []);
   const navigate=useNavigate();
   return (
     <section className="w-full min-h-screen flex items-center bg-white px-10 md:px-16">
@@ -12,7 +18,7 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
 
         {/* LEFT SIDE */}
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-right">
 
           <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900">
             AI-Powered IT Support Platform for Canadian Businesses
@@ -50,7 +56,7 @@ export default function Hero() {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-left">
 
           <div className="bg-gray-100 rounded-2xl p-6 shadow-lg">
 

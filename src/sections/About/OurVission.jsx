@@ -1,14 +1,15 @@
-
-
+import Aos from "aos";
+import 'aos/dist/aos.css'
 import OurVissionImage from "../../assets/images/OurVissionImage.png";
 
 export default function OurVision() {
+  Aos.init({duration:1000,once:true})
   return (
     <section className="section bg-white">
 
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
 
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-left">
 
           <img
             src={OurVissionImage}
@@ -18,7 +19,7 @@ export default function OurVision() {
 
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-right">
 
           <h2 className="text-4xl font-bold mb-6">
             Our Vision

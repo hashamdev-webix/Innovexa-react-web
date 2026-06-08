@@ -1,14 +1,20 @@
 import ContactImage from "../../assets/images/ContactImage.png";
-
+import Aos from 'aos';
+import 'aos/dist/aos.css'
+import { useEffect } from "react";
 
 
 export default function ContactHero() {
+  useEffect(()=>{
+Aos.init({duration:1000,once:true})
+
+  },[])
   return (
     <section className="w-full min-h-[80vh] flex items-center bg-white px-10 md:px-16">
 
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
 
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-left">
 
           <h1 className="text-4xl md:text-5xl font-bold leading-tight">
             Contact Innovexa
@@ -31,7 +37,7 @@ export default function ContactHero() {
 
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-right">
 
           <div className="bg-gray-100 rounded-2xl p-6 shadow-lg">
 

@@ -1,8 +1,20 @@
+
+import Aos from 'aos';
+import 'aos/dist/aos.css'
+import { useEffect } from "react";
+
+
+
+
+
 export default function ContactInfo() {
+  useEffect(()=>{
+    Aos.init({duration:1000,once:true})
+  })
   return (
     <section className="section bg-white">
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto" data-aos="fade-down">
 
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold">
@@ -28,7 +40,7 @@ export default function ContactInfo() {
             </h3>
 
             <p className="text-[var(--color-gray)]">
-              587-849-4612
+              +587-849-4612
             </p>
           </div>
 

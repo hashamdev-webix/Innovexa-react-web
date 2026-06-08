@@ -1,18 +1,23 @@
 
-
+import Aos from 'aos';
+import "aos/dist/aos.css"
 import IndustriesOverviewImage from '../../assets/images/IndustriesOverview.png';
+import { useEffect } from 'react';
 
 
 
 
 
 export default function IndustriesOverview() {
+  useEffect(()=>{
+    Aos.init({duration:1000,once:true})
+  },[])
   return (
     <section className="section bg-white">
 
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
 
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-left">
 
           <img
             src={IndustriesOverviewImage} 
@@ -22,7 +27,7 @@ export default function IndustriesOverview() {
 
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1" data-aos="fade-right">
 
           <h2 className="text-4xl font-bold mb-6">
             Built for Canadian Service-Based Businesses
@@ -33,7 +38,7 @@ export default function IndustriesOverview() {
             every day but may not have dedicated internal IT teams.
           </p>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4" data-aos="fade-down">
 
             <div className="card">Dental Clinics</div>
             <div className="card">Law Firms</div>
