@@ -76,7 +76,7 @@ export default function ContactForm() {
             placeholder="Full Name"
             value={formData.fullName}
             onChange={handleChange}
-            className="w-full p-4 border border-[var(--color-border)] rounded-xl"
+            className="w-full p-4 border border-[var(--color-border)] rounded-xl my-2"
           />
 
           <input
@@ -85,7 +85,7 @@ export default function ContactForm() {
             placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-4 border border-[var(--color-border)] rounded-xl"
+            className="w-full p-4 border border-[var(--color-border)] rounded-xl my-2"
           />
 
           <input
@@ -94,7 +94,7 @@ export default function ContactForm() {
             placeholder="Company Name"
             value={formData.company}
             onChange={handleChange}
-            className="w-full p-4 border border-[var(--color-border)] rounded-xl"
+            className="w-full p-4 border border-[var(--color-border)] rounded-xl my-2"
           />
 
           <textarea
@@ -103,13 +103,13 @@ export default function ContactForm() {
             placeholder="Your Message"
             value={formData.message}
             onChange={handleChange}
-            className="w-full p-4 border border-[var(--color-border)] rounded-xl resize-none"
+            className="w-full p-4 border border-[var(--color-border)] rounded-xl my-2 resize-none"
           ></textarea>
 
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary w-full"
+            className="btn-primary w-full my-2"
           >
             {loading ? "Sending..." : "Send Message"}
           </button>
