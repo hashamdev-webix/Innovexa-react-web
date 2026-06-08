@@ -1,9 +1,12 @@
 
 import GetQouteImage from "../../assets/images/GetQoute.png";
+import { Button } from "../../components/Button";
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function GetQuoteHero() {
+    const navigate=useNavigate();
     return (
         <>
             <section className="w-full min-h-screen flex items-center bg-white px-10 md:px-16">
@@ -29,13 +32,22 @@ export default function GetQuoteHero() {
                         </p>
 
                         <div className="mt-8 flex gap-4">
-                            <button className="btn-primary">
+                            {/* <button className="btn-primary">
                                 Request a Quote
-                            </button>
+                            </button> */}
+                            <Button 
+                            className="btn-primary"
+                            children="Request a Quote"
+                            onClick={()=>{navigate('/quote')}}
+                            
+                            />
 
-                            <button className="btn-secondary">
-                                Contact Us
-                            </button>
+                            <Button
+                                className="btn-secondary"
+                                children="Contact Us"
+                                onClick={()=>{navigate('/contact')}}
+                            />
+                            
                         </div>
 
                     </div>

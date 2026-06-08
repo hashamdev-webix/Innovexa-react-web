@@ -38,6 +38,15 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+#root {
+  overflow-x: hidden;
+  width: 100%;
+}
 
 body {
   font-family: var(--font-main);
@@ -96,7 +105,10 @@ body {
 
 
 .gradient-text {
+  display: inline-block;
   background: var(--gradient-main);
+  background-clip: text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

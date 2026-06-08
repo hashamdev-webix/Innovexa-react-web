@@ -1,4 +1,7 @@
+import { Button } from "../../components/Button";
+import { useNavigate } from "react-router-dom";
 export default function IndustriesCTA() {
+  const navigate = useNavigate();
   return (
     <section className="section">
 
@@ -15,13 +18,17 @@ export default function IndustriesCTA() {
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
 
-          <button className="btn-primary">
-            Get a Quote
-          </button>
+         <Button
+            className="btn-primary"
+            children="Get a Quote"
+            onClick={()=>{navigate('/quote')}}
+          />
 
-          <button className="btn-secondary">
-            Contact Us
-          </button>
+          <Button
+            className="btn-secondary"
+            children="Contact Us"
+            onClick={()=>{navigate('/contact')}}
+          />
 
         </div>
 

@@ -52,38 +52,63 @@ function Industries() {
   ];
 
   return (
-    <section className="section">
-      <div className="max-w-7xl mx-auto px-5">
+  <section className="section">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="text-center mb-12">
-          <h2 className="gradient-text text-4xl font-bold">
-            Industries Innovexa Serves
-          </h2>
+    <div className="text-center mb-10 lg:mb-14">
 
-          <p className="mt-4  max-w-3xl mx-auto">
-            Built for businesses that rely on stable technology but do
-            not have dedicated internal IT teams.
-          </p>
-        </div>
+      <h2
+        className="
+        gradient-text
+        font-bold
+        text-3xl
+        sm:text-4xl
+        md:text-5xl
+        "
+      >
+        Industries Innovexa Serves
+      </h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {industries.map((industry) => (
-            <Card
-              key={industry.title}
-              title={industry.title}
-              children="Get a Quote"
-              description={industry.problem}
-              solutions={industry.solution}
-              onClick={() => {
-                navigate('/quote')
-              }}
-         
-            />
-          ))}
-        </div>
+      <p
+        className="
+        mt-4
+        max-w-3xl
+        mx-auto
+        text-sm
+        sm:text-base
+        lg:text-lg
+        text-gray-600
+        "
+      >
+        Built for businesses that rely on stable technology but do
+        not have dedicated internal IT teams.
+      </p>
 
-      </div>
-    </section>
+    </div>
+
+    <div
+      className="
+      grid
+      grid-cols-1
+      sm:grid-cols-2
+      lg:grid-cols-3
+      gap-6
+      "
+    >
+      {industries.map((industry) => (
+        <Card
+          key={industry.title}
+          title={industry.title}
+          children="Get a Quote"
+          description={industry.problem}
+          solutions={industry.solution}
+          onClick={() => navigate('/quote')}
+        />
+      ))}
+    </div>
+
+  </div>
+</section>
   );
 }
 

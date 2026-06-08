@@ -1,7 +1,7 @@
 
 import WhoWeAreImage from '../../assets/images/WhoWEAreImage.png';
 
-
+import { Button } from '../../components/Button';
 
 
 export default function WhoWeAre() {
@@ -36,10 +36,14 @@ export default function WhoWeAre() {
             We help organizations better understand technology issues,
             improve response times and reduce operational disruptions.
           </p>
+           <Button
+           className="btn-primary"
+            children="Learn More"
+            onClick={()=>{}}
 
-          <button className="btn-primary">
-            Get a Quote
-          </button>
+           
+           />
+     
 
         </div>
 

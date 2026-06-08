@@ -18,7 +18,7 @@ export default function ContactInfo() {
             </h3>
 
             <p className="text-[var(--color-gray)]">
-              info@innovexa.ca
+               Info@innovexasoftwares.com
             </p>
           </div>
 
@@ -28,7 +28,7 @@ export default function ContactInfo() {
             </h3>
 
             <p className="text-[var(--color-gray)]">
-              +1 (000) 000-0000
+              587-849-4612
             </p>
           </div>
 
@@ -38,7 +38,7 @@ export default function ContactInfo() {
             </h3>
 
             <p className="text-[var(--color-gray)]">
-              Ontario, Canada
+               112C-219 Dufferin St, Toronto, ON, M6K 3J1, Canada
             </p>
           </div>
 

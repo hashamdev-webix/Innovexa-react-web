@@ -1,4 +1,9 @@
+import { useNavigate } from "react-router-dom";
+import { Button } from "../../components/Button";
+
 export default function QuoteCTA() {
+  const navigate = useNavigate();
+
   return (
     <section className="section">
 
@@ -15,13 +20,19 @@ export default function QuoteCTA() {
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
 
-          <button className="btn-primary">
+          <Button
+            className="btn-primary"
+            onClick={() => navigate('/quote')}
+          >
             Submit Quote Request
-          </button>
+          </Button>
 
-          <button className="btn-secondary">
+          <Button
+            className="btn-secondary"
+            onClick={() => navigate('/contact')}
+          >
             Contact Us
-          </button>
+          </Button>
 
         </div>
 
