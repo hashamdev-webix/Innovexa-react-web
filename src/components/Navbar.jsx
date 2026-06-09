@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import logo from "../assets/images/logo.jpeg";
 
 const Navbar = () => {
-    const Navigate=use
+    const Navigate = use
     const [menuOpen, setMenuOpen] = useState(false);
 
     const links = [
@@ -12,6 +12,7 @@ const Navbar = () => {
         { name: "Services", path: "/services" },
         { name: "Industries", path: "/industries" },
         { name: "About", path: "/about" },
+        { name: "Contact Us", path: "/contact" }
     ];
 
     return (
@@ -40,10 +41,10 @@ const Navbar = () => {
                     {/* Desktop Buttons */}
                     <div className="hidden lg:flex items-center gap-3">
                         <Link
-                            to="/contact"
+                            to="/login"
                             className="btn-secondary border border-[var(--color-border)] px-5 py-2 rounded-xl hover:bg-gray-100 hover:text-[var(--color-primary)] transition-all duration-200"
                         >
-                            Contact Us
+                            Login
                         </Link>
 
                         <Link
@@ -52,6 +53,7 @@ const Navbar = () => {
                         >
                             Get a Quote
                         </Link>
+
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -78,15 +80,6 @@ const Navbar = () => {
                                     {link.name}
                                 </Link>
                             ))}
-
-                            <Link
-                                to="/contact"
-                              onClick={()=>{Navigate('/contact')}}
-                                className="btn-secondary border border-[var(--color-border)] py-3 rounded-xl text-center text-[var(--color-dark)] "
-                            >
-                               Contact Us
-                            </Link>
-
                             <Link
                                 to="/quote"
                                 onClick={() => setMenuOpen(false)}
@@ -94,6 +87,17 @@ const Navbar = () => {
                             >
                                 Get a Quote
                             </Link>
+
+
+                            <Link
+                                to="/login"
+                                onClick={() => { Navigate('/contact') }}
+                                className="btn-secondary border border-[var(--color-border)] py-3 rounded-xl text-center text-[var(--color-dark)] "
+                            >
+                                Login
+                            </Link>
+
+
 
                         </div>
                     </div>
