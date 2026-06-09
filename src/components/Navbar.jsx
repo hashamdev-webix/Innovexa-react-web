@@ -84,7 +84,7 @@ const Navbar = () => {
                               onClick={()=>{Navigate('/contact')}}
                                 className="btn-secondary border border-[var(--color-border)] py-3 rounded-xl text-center text-[var(--color-dark)] "
                             >
-                                Contact Us
+                               Contact Us
                             </Link>
 
                             <Link
