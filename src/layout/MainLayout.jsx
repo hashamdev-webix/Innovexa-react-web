@@ -8,7 +8,7 @@ export default function MainLayout({ children }) {
   // pages jahan Navbar/Footer hide karna hai
   const hideLayout =
     location.pathname === "/login" ||
-    location.pathname === "/signup";
+    location.pathname === "/signup" ||  location.pathname==="/admin-dashboard" ||  location.pathname==="/forgot-password"||  location.pathname==="/reset-password"
 
   return (
     <>
