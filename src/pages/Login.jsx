@@ -76,7 +76,7 @@ export default function Login() {
                     localStorage.setItem("userRole", "user");
                     
                     console.log("User logged in, redirecting to /");
-                    navigate("/");
+                   
                 }
                 
             } else {
