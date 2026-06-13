@@ -1,30 +1,51 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, AlertCircle, CheckCircle, User, Briefcase, Building, MessageCircle } from "lucide-react";
-import { submitContact } from "../../services/contact.api";
+import { Mail, Phone, MapPin, Clock, Send, AlertCircle, CheckCircle, User, Briefcase, MessageCircle, Ticket, Loader } from "lucide-react";
+import axios from "axios";
+
+const API_URL = "http://localhost:5007";
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    businessName: "",
-    email: "",
-    phone: "",
-    city: "",
-    inquiryType: "",
-    businessType: "",
-    message: "",
-  });
-
+  const [formType, setFormType] = useState("contact");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
 
+  // Contact Form State (Simple - jaisa pehle tha)
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  // Ticket Form State
+  const [ticketData, setTicketData] = useState({
+    businessName: "",
+    contactName: "",
+    email: "",
+    phone: "",
+    issueCategory: "Network Issue",
+    issueTitle: "",
+    issueDescription: "",
+    priority: "medium"
+  });
+
+  const issueCategories = [
+    "Network Issue", "Hardware Problem", "Software Issue", "Printer Problem",
+    "Security Concern", "Email Issue", "Data Backup", "Other"
+  ];
+
+  const priorityOptions = [
+    { value: "low", label: "Low - Minor issue" },
+    { value: "medium", label: "Medium - Affecting work" },
+    { value: "high", label: "High - Urgent attention" },
+    { value: "critical", label: "Critical - System down" }
+  ];
+
+  // Handle Contact Change
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    // Clear error for this field
+    setFormData({ ...formData, [e.target.name]: e.target.value });
     if (validationErrors[e.target.name]) {
       setValidationErrors({ ...validationErrors, [e.target.name]: null });
     }
@@ -32,99 +53,146 @@ export default function Contact() {
     setSuccess("");
   };
 
-  const validateForm = () => {
+  // Handle Ticket Change
+  const handleTicketChange = (e) => {
+    setTicketData({ ...ticketData, [e.target.name]: e.target.value });
+    if (validationErrors[e.target.name]) {
+      setValidationErrors({ ...validationErrors, [e.target.name]: null });
+    }
+    setError("");
+    setSuccess("");
+  };
+
+  // Validate Contact Form
+  const validateContactForm = () => {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
-    if (!formData.fullName.trim()) {
-      errors.fullName = "Full name is required";
-    }
-    if (!emailRegex.test(formData.email)) {
-      errors.email = "Please enter a valid email address";
-    }
-    if (formData.phone && !/^[\d\s+()-]{10,}$/.test(formData.phone)) {
-      errors.phone = "Please enter a valid phone number (minimum 10 digits)";
-    }
-    if (!formData.inquiryType) {
-      errors.inquiryType = "Please select an inquiry type";
-    }
-    if (!formData.message.trim()) {
-      errors.message = "Please enter your message";
-    }
+    if (!formData.fullName.trim()) errors.fullName = "Full name is required";
+    if (!emailRegex.test(formData.email)) errors.email = "Please enter a valid email address";
+    if (!formData.message.trim()) errors.message = "Please enter your message";
     
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSuccess("");
-    setError("");
+  // Validate Ticket Form
+  const validateTicketForm = () => {
+    const errors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
-    if (!validateForm()) {
+    if (!ticketData.businessName.trim()) errors.businessName = "Business name is required";
+    if (!ticketData.contactName.trim()) errors.contactName = "Contact name is required";
+    if (!emailRegex.test(ticketData.email)) errors.email = "Please enter a valid email address";
+    if (!ticketData.issueTitle.trim()) errors.issueTitle = "Issue title is required";
+    if (!ticketData.issueDescription.trim()) errors.issueDescription = "Issue description is required";
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Submit Contact Form
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateContactForm()) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    
+
     setLoading(true);
+    setSuccess("");
+    setError("");
 
     try {
-      const response = await submitContact(formData);
-      
-      if (response.success) {
-        setSuccess(response.message || "Message sent successfully! We'll get back to you shortly.");
-        
-        // Reset form
-        setFormData({
-          fullName: "",
-          businessName: "",
-          email: "",
-          phone: "",
-          city: "",
-          inquiryType: "",
-          businessType: "",
-          message: "",
-        });
-        
-        // Clear success message after 5 seconds
+      const response = await axios.post(`${API_URL}/api/contact`, formData);
+      if (response.data.success) {
+        setSuccess("Message sent successfully! We'll get back to you shortly.");
+        setFormData({ fullName: "", email: "", phone: "", message: "" });
         setTimeout(() => setSuccess(""), 5000);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        setError(response.message || "Something went wrong. Please try again.");
       }
     } catch (err) {
-      console.error("Contact form error:", err);
-      
-      if (err.errors) {
-        setValidationErrors(err.errors);
-        setError("Please fix the validation errors below.");
-      } else if (err.message) {
-        setError(err.message);
-      } else {
-        setError("Failed to send message. Please try again later.");
-      }
+      setError(err.response?.data?.message || "Failed to send message. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Submit Ticket Form
+  const handleTicketSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateTicketForm()) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    setLoading(true);
+    setSuccess("");
+    setError("");
+
+    try {
+      const response = await axios.post(`${API_URL}/api/tickets`, ticketData);
+      if (response.data.success) {
+        setSuccess(`Ticket #${response.data.data?.ticketId || "created"} successfully! Support team will contact you.`);
+        setTicketData({
+          businessName: "", contactName: "", email: "", phone: "",
+          issueCategory: "Network Issue", issueTitle: "", issueDescription: "", priority: "medium"
+        });
+        setTimeout(() => setSuccess(""), 5000);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to create ticket. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    if (formType === "contact") {
+      handleContactSubmit(e);
+    } else {
+      handleTicketSubmit(e);
+    }
+  };
+
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            Have questions? We'd love to hear from you. Choose an option below to get in touch.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 ">
+        {/* Form Type Selector */}
+        <div className="flex justify-center gap-4 mb-8">
+          <button
+            onClick={() => { setFormType("contact"); setError(""); setSuccess(""); setValidationErrors({}); }}
+            className={`px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 ${
+              formType === "contact" ? "bg-blue-600 text-white shadow-lg" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            <Mail size={20} />
+            General Inquiry
+          </button>
+          <button
+            onClick={() => { setFormType("ticket"); setError(""); setSuccess(""); setValidationErrors({}); }}
+            className={`px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 ${
+              formType === "ticket" ? "bg-green-600 text-white shadow-lg" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            <Ticket size={20} />
+            Support Ticket
+          </button>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Contact Info Cards */}
-          <div className="lg:col-span-1 space-y-6 ">
-            <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="lg:col-span-1 space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                   <Phone className="text-blue-600" size={24} />
                 </div>
                 <div>
@@ -135,9 +203,9 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow my-3">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                   <Mail className="text-blue-600" size={24} />
                 </div>
                 <div>
@@ -148,9 +216,9 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow my-3">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                   <MapPin className="text-blue-600" size={24} />
                 </div>
                 <div>
@@ -164,9 +232,9 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                   <Clock className="text-blue-600" size={24} />
                 </div>
                 <div>
@@ -178,19 +246,18 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Contact Form */}
+          {/* Forms */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                {formType === "contact" ? "Send us a Message" : "Create Support Ticket"}
+              </h2>
 
               {/* Success Message */}
               {success && (
                 <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3">
                   <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-green-800 font-medium">Success!</p>
-                    <p className="text-green-700 text-sm">{success}</p>
-                  </div>
+                  <p className="text-green-700">{success}</p>
                 </div>
               )}
 
@@ -198,18 +265,15 @@ export default function Contact() {
               {error && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
                   <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-red-800 font-medium">Error</p>
-                    <p className="text-red-700 text-sm">{error}</p>
-                  </div>
+                  <p className="text-red-700">{error}</p>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Name and Business */}
-                <div className="grid md:grid-cols-2 gap-5">
+              {/* CONTACT FORM - Simple */}
+              {formType === "contact" && (
+                <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <div className="relative my-2">
+                    <div className="relative">
                       <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                       <input
                         type="text"
@@ -217,34 +281,16 @@ export default function Contact() {
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="Full Name *"
-                        className={`w-full pl-12 pr-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition ${
+                        className={`w-full pl-12 pr-4 py-4 border rounded-xl outline-none transition ${
                           validationErrors.fullName ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
                     </div>
-                    {validationErrors.fullName && (
-                      <p className="text-red-500 text-xs mt-1">{validationErrors.fullName}</p>
-                    )}
+                    {validationErrors.fullName && <p className="text-red-500 text-xs mt-1">{validationErrors.fullName}</p>}
                   </div>
-                  <div>
-                    <div className="relative my-2">
-                      <Briefcase size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
-                        name="businessName"
-                        value={formData.businessName}
-                        onChange={handleChange}
-                        placeholder="Business Name"
-                        className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                      />
-                    </div>
-                  </div>
-                </div>
 
-                {/* Email and Phone */}
-                <div className="grid md:grid-cols-2 gap-5">
                   <div>
-                    <div className="relative my-2">
+                    <div className="relative">
                       <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                       <input
                         type="email"
@@ -252,17 +298,16 @@ export default function Contact() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="Email Address *"
-                        className={`w-full pl-12 pr-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition ${
+                        className={`w-full pl-12 pr-4 py-4 border rounded-xl outline-none transition ${
                           validationErrors.email ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
                     </div>
-                    {validationErrors.email && (
-                      <p className="text-red-500 text-xs mt-1">{validationErrors.email}</p>
-                    )}
+                    {validationErrors.email && <p className="text-red-500 text-xs mt-1">{validationErrors.email}</p>}
                   </div>
+
                   <div>
-                    <div className="relative my-2">
+                    <div className="relative">
                       <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                       <input
                         type="tel"
@@ -270,123 +315,108 @@ export default function Contact() {
                         value={formData.phone}
                         onChange={handleChange}
                         placeholder="Phone Number"
-                        className={`w-full pl-12 pr-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition ${
-                          validationErrors.phone ? 'border-red-500' : 'border-gray-300'
+                        className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl outline-none transition"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="relative">
+                      <MessageCircle size={18} className="absolute left-4 top-4 text-gray-400" />
+                      <textarea
+                        name="message"
+                        rows="5"
+                        value={formData.message}
+                        onChange={handleChange}
+                        placeholder="Your Message *"
+                        className={`w-full pl-12 pr-4 py-4 border rounded-xl resize-none outline-none transition ${
+                          validationErrors.message ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
                     </div>
-                    {validationErrors.phone && (
-                      <p className="text-red-500 text-xs mt-1">{validationErrors.phone}</p>
-                    )}
+                    {validationErrors.message && <p className="text-red-500 text-xs mt-1">{validationErrors.message}</p>}
                   </div>
-                </div>
 
-                {/* City and Inquiry Type */}
-                <div className="grid md:grid-cols-2 gap-5">
-                  <div>
-                    <div className="relative my-2">
-                      <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        placeholder="City / Province"
-                        className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                      />
+                  <button type="submit" disabled={loading}
+                    className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-2">
+                    {loading ? <Loader className="animate-spin h-5 w-5" /> : <Send size={18} />}
+                    {loading ? "Sending..." : "Send Message"}
+                  </button>
+                </form>
+              )}
+
+              {/* TICKET FORM - As it is */}
+              {formType === "ticket" && (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <input type="text" name="businessName" value={ticketData.businessName} onChange={handleTicketChange}
+                        placeholder="Business Name *" className={`w-full p-4 border rounded-xl outline-none transition ${
+                          validationErrors.businessName ? 'border-red-500' : 'border-gray-300'
+                        }`} />
+                      {validationErrors.businessName && <p className="text-red-500 text-xs mt-1">{validationErrors.businessName}</p>}
+                    </div>
+                    <div>
+                      <input type="text" name="contactName" value={ticketData.contactName} onChange={handleTicketChange}
+                        placeholder="Contact Person *" className={`w-full p-4 border rounded-xl outline-none transition ${
+                          validationErrors.contactName ? 'border-red-500' : 'border-gray-300'
+                        }`} />
+                      {validationErrors.contactName && <p className="text-red-500 text-xs mt-1">{validationErrors.contactName}</p>}
                     </div>
                   </div>
+
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <input type="email" name="email" value={ticketData.email} onChange={handleTicketChange}
+                        placeholder="Email Address *" className={`w-full p-4 border rounded-xl outline-none transition ${
+                          validationErrors.email ? 'border-red-500' : 'border-gray-300'
+                        }`} />
+                      {validationErrors.email && <p className="text-red-500 text-xs mt-1">{validationErrors.email}</p>}
+                    </div>
+                    <div>
+                      <input type="tel" name="phone" value={ticketData.phone} onChange={handleTicketChange}
+                        placeholder="Phone Number" className="w-full p-4 border border-gray-300 rounded-xl outline-none transition" />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <select name="issueCategory" value={ticketData.issueCategory} onChange={handleTicketChange}
+                        className="w-full p-4 border border-gray-300 rounded-xl outline-none bg-white">
+                        {issueCategories.map(cat => <option key={cat}>{cat}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <select name="priority" value={ticketData.priority} onChange={handleTicketChange}
+                        className="w-full p-4 border border-gray-300 rounded-xl outline-none bg-white">
+                        {priorityOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                      </select>
+                    </div>
+                  </div>
+
                   <div>
-                    <select
-                      name="inquiryType"
-                      value={formData.inquiryType}
-                      onChange={handleChange}
-                      className={`w-full px-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white transition ${
-                        validationErrors.inquiryType ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                    >
-                      <option value="">Select Inquiry Type *</option>
-                      <option value="General Inquiry">General Inquiry</option>
-                      <option value="AI IT Troubleshooting">AI IT Troubleshooting</option>
-                      <option value="Network Monitoring">Network Monitoring</option>
-                      <option value="Internet & Wi-Fi Issues">Internet & Wi-Fi Issues</option>
-                      <option value="Printer & Device Support">Printer & Device Support</option>
-                      <option value="Onboarding & Setup">Onboarding & Setup</option>
-                      <option value="Monthly Technology Reports">Monthly Technology Reports</option>
-                      <option value="Quote Request">Quote Request</option>
-                      <option value="Partnership Inquiry">Partnership Inquiry</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    {validationErrors.inquiryType && (
-                      <p className="text-red-500 text-xs mt-1">{validationErrors.inquiryType}</p>
-                    )}
+                    <input type="text" name="issueTitle" value={ticketData.issueTitle} onChange={handleTicketChange}
+                      placeholder="Issue Title *" className={`w-full p-4 border rounded-xl outline-none transition ${
+                        validationErrors.issueTitle ? 'border-red-500' : 'border-gray-300'
+                      }`} />
+                    {validationErrors.issueTitle && <p className="text-red-500 text-xs mt-1">{validationErrors.issueTitle}</p>}
                   </div>
-                </div>
 
-                {/* Business Type */}
-                <div>
-                  <div className="relative my-2">
-                    <Building size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <select
-                      name="businessType"
-                      value={formData.businessType}
-                      onChange={handleChange}
-                      className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white transition"
-                    >
-                      <option value="">Business Type</option>
-                      <option value="Dental Clinic">Dental Clinic</option>
-                      <option value="Law Firm">Law Firm</option>
-                      <option value="Accounting Firm">Accounting Firm</option>
-                      <option value="Medical Office">Medical Office</option>
-                      <option value="Real Estate Office">Real Estate Office</option>
-                      <option value="Service-Based Business">Service-Based Business</option>
-                      <option value="Other">Other</option>
-                    </select>
+                  <div>
+                    <textarea name="issueDescription" value={ticketData.issueDescription} onChange={handleTicketChange}
+                      rows="5" placeholder="Please describe your issue in detail *" className={`w-full p-4 border rounded-xl resize-none outline-none transition ${
+                        validationErrors.issueDescription ? 'border-red-500' : 'border-gray-300'
+                      }`} />
+                    {validationErrors.issueDescription && <p className="text-red-500 text-xs mt-1">{validationErrors.issueDescription}</p>}
                   </div>
-                </div>
 
-                {/* Message */}
-                <div>
-                  <div className="relative my-2">
-                    <MessageCircle size={18} className="absolute left-4 top-4 text-gray-400" />
-                    <textarea
-                      name="message"
-                      rows="6"
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Tell us how we can help your business. *"
-                      className={`w-full pl-12 pr-4 py-4 border rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition ${
-                        validationErrors.message ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                    />
-                  </div>
-                  {validationErrors.message && (
-                    <p className="text-red-500 text-xs mt-1">{validationErrors.message}</p>
-                  )}
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send size={18} />
-                      Send Message
-                    </>
-                  )}
-                </button>
-              </form>
+                  <button type="submit" disabled={loading}
+                    className="w-full py-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-2">
+                    {loading ? <Loader className="animate-spin h-5 w-5" /> : <Ticket size={18} />}
+                    {loading ? "Creating Ticket..." : "Submit Support Ticket"}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>

@@ -1,83 +1,106 @@
 // src/services/api.js
 import axios from "axios";
 
-const API_URL = "http://localhost:5007";
+const API_BASE_URL = "http://localhost:5008";
 
 const api = axios.create({
-  baseURL: API_URL,
-  headers: { "Content-Type": "application/json" },
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  timeout: 30000,
 });
 
 // Request interceptor
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("adminToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("adminToken") || localStorage.getItem("userToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    return config;
+  },
+  (error) => {
+    console.error("Request interceptor error:", error);
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`✅ API Response: ${response.config.url} - Status: ${response.status}`);
+    return response;
+  },
   (error) => {
+    console.error(`❌ API Error: ${error.config?.url} -`, error.message);
+    
+    if (error.code === 'ERR_NETWORK') {
+      console.error('⚠️ Backend server is not running!');
+    }
+    
     if (error.response?.status === 401) {
-      localStorage.removeItem("adminToken");
-      localStorage.removeItem("adminData");
-      window.location.href = "/admin-login";
+      localStorage.clear();
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
 );
 
-// API Endpoints - Updated for Admin model
+// API Endpoints
 export const API_ENDPOINTS = {
-  // ========== AUTH (Admin) ==========
-  ADMIN_LOGIN: `${API_URL}/api/auth/login`,  // Your login endpoint
-  ADMIN_LOGOUT: `${API_URL}/api/auth/logout`,
-  GET_ME: `${API_URL}/api/auth/me`,
+  // Auth
+  LOGIN: "/api/auth/login",
+  REGISTER: "/api/auth/register",
+  REGISTER_ADMIN: "/api/auth/register-admin",
+  GET_USERS: "/api/auth/users",
+  DELETE_USER: (id) => `/api/auth/users/${id}`,
   
-  // ========== ADMIN MANAGEMENT ==========
-  GET_ADMINS: `${API_URL}/api/auth/admins`,
-  GET_ADMIN: (id) => `${API_URL}/api/auth/admin/${id}`,
-  CREATE_ADMIN: `${API_URL}/api/auth/admin/create`,
-  DELETE_ADMIN: (id) => `${API_URL}/api/auth/admin/${id}`,
-  UPDATE_ADMIN_ROLE: (id) => `${API_URL}/api/auth/admin/${id}/role`,
+  // Forgot Password
+  FORGOT_PASSWORD: "/api/auth/forgot-password",
+  RESET_PASSWORD: (token) => `/api/auth/reset-password/${token}`,
+  DEBUG_RESET: (email) => `/api/auth/debug-reset/${email}`,
+  VALIDATE_RESET_TOKEN: (token) => `/api/auth/validate-reset-token/${token}`,
   
-  // ========== TICKETS (Need to create these endpoints) ==========
-  GET_TICKETS: (params) => `${API_URL}/api/tickets${params ? `?${new URLSearchParams(params)}` : ''}`,
-  GET_TICKET: (id) => `${API_URL}/api/tickets/${id}`,
-  CREATE_TICKET: `${API_URL}/api/tickets`,
-  UPDATE_TICKET: (id) => `${API_URL}/api/tickets/${id}`,
-  DELETE_TICKET: (id) => `${API_URL}/api/tickets/${id}`,
-  UPDATE_TICKET_STATUS: (id) => `${API_URL}/api/tickets/${id}/status`,
-  UPDATE_TICKET_PRIORITY: (id) => `${API_URL}/api/tickets/${id}/priority`,
+  // Tickets
+  GET_TICKETS: (params) => {
+    if (params && Object.keys(params).length) {
+      const query = new URLSearchParams(params).toString();
+      return `/api/tickets?${query}`;
+    }
+    return "/api/tickets";
+  },
+  GET_TICKET: (id) => `/api/tickets/${id}`,
+  CREATE_TICKET: "/api/tickets",
+  UPDATE_TICKET: (id) => `/api/tickets/${id}`,
+  DELETE_TICKET: (id) => `/api/tickets/${id}`,
   
-  // ========== QUOTES ==========
-  GET_QUOTES: `${API_URL}/api/quotes`,
-  GET_QUOTE: (id) => `${API_URL}/api/quotes/${id}`,
-  CREATE_QUOTE: `${API_URL}/api/quotes`,
-  UPDATE_QUOTE_STATUS: (id) => `${API_URL}/api/quotes/${id}/status`,
-  DELETE_QUOTE: (id) => `${API_URL}/api/quotes/${id}`,
+  // Quotes
+  GET_QUOTES: "/api/quotes",
+  CREATE_QUOTE: "/api/quotes",
+  UPDATE_QUOTE_STATUS: (id) => `/api/quotes/${id}/status`,
+  DELETE_QUOTE: (id) => `/api/quotes/${id}`,
   
-  // ========== CONTACTS ==========
-  GET_CONTACTS: `${API_URL}/api/contact`,
-  GET_CONTACT: (id) => `${API_URL}/api/contact/${id}`,
-  UPDATE_CONTACT_STATUS: (id) => `${API_URL}/api/contact/${id}/status`,
-  DELETE_CONTACT: (id) => `${API_URL}/api/contact/${id}`,
+  // Contacts
+  GET_CONTACTS: "/api/contact",
+  CREATE_CONTACT: "/api/contact",
+  UPDATE_CONTACT_STATUS: (id) => `/api/contact/${id}/status`,
+  DELETE_CONTACT: (id) => `/api/contact/${id}`,
   
-  // ========== MONITORING ==========
-  GET_DEVICES: (businessId) => `${API_URL}/api/monitor/status/${businessId}`,
-  UPDATE_DEVICE_STATUS: (deviceId) => `${API_URL}/api/monitor/device/${deviceId}/status`,
+  // Monitor
+  GET_MONITOR_STATUS: (businessId) => `/api/monitor/status/${businessId}`,
+  ADD_MONITOR_SAMPLE: "/api/monitor/sample-data",
+  MONITOR_AGENT: "/api/monitor/agent",
+  GET_MONITOR_ALERTS: (businessId) => `/api/monitor/alerts/${businessId}`,
+  RESOLVE_MONITOR_ALERT: "/api/monitor/alert/resolve",
+  DELETE_MONITOR_DEVICE: (deviceId) => `/api/monitor/device/${deviceId}`,
   
-  // ========== REPORTS ==========
-  GET_REPORTS: `${API_URL}/api/reports`,
-  DOWNLOAD_REPORT: (id) => `${API_URL}/api/reports/${id}/download`,
-  
-  // ========== DEBUG ==========
-  DEBUG_RESET: (email) => `${API_URL}/api/auth/debug-reset/${email}`,
-  DEBUG_EMAILS: `${API_URL}/api/auth/debug-emails`,
+  // Reports
+  GET_REPORTS: "/api/reports",
+  CREATE_REPORT: "/api/reports",
+  GENERATE_REPORT: "/api/reports/generate",
+  DELETE_REPORT: (id) => `/api/reports/${id}`,
 };
 
 export default api;
-export { API_URL };

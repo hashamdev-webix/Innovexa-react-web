@@ -27,8 +27,8 @@ export default function QuoteFormSection() {
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
 
-  // API Configuration
-  const API_URL = "http://localhost:5000";
+  // ✅ FIXED: API URL - port 5007 (not 5000)
+  const API_URL = "http://localhost:5007";
 
   // Handle Inputs
   const handleChange = (e) => {
@@ -39,7 +39,6 @@ export default function QuoteFormSection() {
       [name]: type === "checkbox" ? checked : value,
     });
     
-    // Clear error for this field if it exists
     if (validationErrors[name]) {
       setValidationErrors({
         ...validationErrors,
@@ -96,7 +95,6 @@ export default function QuoteFormSection() {
     setError("");
     setValidationErrors({});
 
-    // Prepare data for backend (convert empty strings to null, number fields to numbers)
     const submitData = {
       businessName: formData.businessName,
       contactPerson: formData.contactPerson,
@@ -118,6 +116,7 @@ export default function QuoteFormSection() {
     };
 
     try {
+      // ✅ FIXED: Correct API endpoint
       const response = await axios.post(`${API_URL}/api/quotes`, submitData, {
         headers: {
           "Content-Type": "application/json",
@@ -127,7 +126,6 @@ export default function QuoteFormSection() {
       if (response.data.success) {
         setSuccess(response.data.message || "Quote request submitted successfully! Our team will contact you within 24 hours.");
 
-        // Reset form
         setFormData({
           businessName: "",
           contactPerson: "",
@@ -148,17 +146,15 @@ export default function QuoteFormSection() {
           budgetRange: "Not sure",
         });
 
-        // Scroll to top
         window.scrollTo({ top: 0, behavior: "smooth" });
-        
-        // Clear success message after 5 seconds
         setTimeout(() => setSuccess(""), 5000);
       }
     } catch (err) {
       console.error("Quote submission error:", err);
       
-      if (err.response?.data?.errors) {
-        // Handle validation errors from backend
+      if (err.code === 'ERR_NETWORK') {
+        setError("Cannot connect to server. Please make sure backend is running on port 5007");
+      } else if (err.response?.data?.errors) {
         const errors = {};
         err.response.data.errors.forEach((error) => {
           errors[error.path] = error.msg;
@@ -167,13 +163,10 @@ export default function QuoteFormSection() {
         setError("Please fix the validation errors below.");
       } else if (err.response?.data?.message) {
         setError(err.response.data.message);
-      } else if (err.request) {
-        setError("Unable to connect to server. Please check if backend is running on port 5000");
       } else {
         setError("Something went wrong. Please try again.");
       }
       
-      // Scroll to top to show error
       window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setLoading(false);

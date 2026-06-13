@@ -70,13 +70,13 @@ export default function Login() {
                     navigate("/admin-dashboard");
                     
                 } else {
-                    // ✅ USER
+                    // ✅ USER - Fixed redirect
                     localStorage.setItem("userToken", token);
                     localStorage.setItem("userData", JSON.stringify(userData));
                     localStorage.setItem("userRole", "user");
                     
-                    console.log("User logged in, redirecting to /");
-                   
+                    console.log(`User logged in, redirecting to home page`);
+                    navigate("/home"); // Redirect to home page
                 }
                 
             } else {
@@ -247,17 +247,6 @@ export default function Login() {
                             </p>
                         </div>
 
-                        <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
-                            <p className="text-xs text-gray-500 text-center">
-                                Demo Credentials:
-                            </p>
-                            <p className="text-xs text-gray-400 text-center mt-1">
-                                <span className="font-semibold">Admin:</span> starshahzaib2@gmail.com / Admin@123456
-                            </p>
-                            <p className="text-xs text-gray-400 text-center mt-1">
-                                <span className="font-semibold">User:</span> ahmad@gmail.com / 123456
-                            </p>
-                        </div>
                     </form>
 
                     <div className="mt-8 text-center text-gray-500 text-sm">

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowLeft, AlertCircle, CheckCircle, Shield } from "lucide-react";
 import logo from "../assets/images/logo.jpeg";
-import api, { API_URL, API_ENDPOINTS } from "../services/api"; // ← Import api instance and endpoints
+import api from "../services/api"; // ← Remove API_URL, API_ENDPOINTS if not needed
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -30,17 +30,15 @@ export default function ForgotPassword() {
     setSuccess("");
 
     try {
-      // Using api instance instead of axios directly
-      const debugRes = await api.get(API_ENDPOINTS.DEBUG_RESET(email));
+      // ✅ Use direct URL instead of API_ENDPOINTS
+      const debugRes = await api.get(`/api/auth/debug-reset/${email}`);
       
       if (debugRes.data.success && debugRes.data.resetUrl) {
         setSuccess("Reset link generated! Redirecting to reset password page...");
         
-        // Extract token from resetUrl and navigate properly
         const urlParts = debugRes.data.resetUrl.split('/');
         const token = urlParts[urlParts.length - 1];
         
-        // 2 second baad reset page par redirect using navigate
         setTimeout(() => {
           navigate(`/reset-password/${token}`);
         }, 1500);
@@ -74,10 +72,6 @@ export default function ForgotPassword() {
               <p className="text-gray-500 text-sm mt-2">
                 Enter your email address to reset your password.
               </p>
-              {/* Debug info - shows which API is being used */}
-              <p className="text-xs text-gray-400 mt-2">
-                Backend API: {API_URL}
-              </p>
             </div>
 
             {success && (
@@ -110,14 +104,11 @@ export default function ForgotPassword() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="starshahzaib2@gmail.com"
+                    placeholder="admin@innovexa.com"
                     className="w-full h-12 pl-12 pr-4 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition"
                     required
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Available emails: starshahzaib2@gmail.com, ahmad@gmail.com
-                </p>
               </div>
 
               <button

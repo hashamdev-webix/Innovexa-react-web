@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, LockIcon, Shield, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { User, Mail, LockIcon, Shield, Eye, EyeOff, AlertCircle, CheckCircle, XCircle } from "lucide-react";
 import axios from "axios";
 import logo from "../assets/images/logo.jpeg";
 
@@ -19,13 +19,69 @@ export default function Signup() {
     secretKey: "",
   });
 
+  // Password strength state
+  const [passwordStrength, setPasswordStrength] = useState({
+    hasMinLength: false,
+    hasUpperCase: false,
+    hasLowerCase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+    score: 0,
+  });
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+    
+    // Check password strength if password field changes
+    if (name === "password") {
+      checkPasswordStrength(value);
+    }
+    
     setError("");
     setSuccess("");
+  };
+
+  const checkPasswordStrength = (password) => {
+    const hasMinLength = password.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    let score = 0;
+    if (hasMinLength) score++;
+    if (hasUpperCase) score++;
+    if (hasLowerCase) score++;
+    if (hasNumber) score++;
+    if (hasSpecialChar) score++;
+    
+    setPasswordStrength({
+      hasMinLength,
+      hasUpperCase,
+      hasLowerCase,
+      hasNumber,
+      hasSpecialChar,
+      score,
+    });
+  };
+
+  const getPasswordStrengthText = () => {
+    const { score } = passwordStrength;
+    if (score === 0) return { text: "No Password", color: "text-gray-500", bg: "bg-gray-200" };
+    if (score <= 2) return { text: "Weak", color: "text-red-600", bg: "bg-red-500" };
+    if (score <= 3) return { text: "Medium", color: "text-yellow-600", bg: "bg-yellow-500" };
+    if (score <= 4) return { text: "Strong", color: "text-blue-600", bg: "bg-blue-500" };
+    return { text: "Very Strong", color: "text-green-600", bg: "bg-green-500" };
+  };
+
+  const getPasswordStrengthWidth = () => {
+    const { score } = passwordStrength;
+    return `${(score / 5) * 100}%`;
   };
 
   const validateForm = () => {
@@ -37,8 +93,35 @@ export default function Signup() {
       setError("Please enter a valid email address");
       return false;
     }
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    
+    // Password validation
+    if (!formData.password) {
+      setError("Password is required");
+      return false;
+    }
+    
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return false;
+    }
+    
+    if (!/[A-Z]/.test(formData.password)) {
+      setError("Password must contain at least one uppercase letter");
+      return false;
+    }
+    
+    if (!/[a-z]/.test(formData.password)) {
+      setError("Password must contain at least one lowercase letter");
+      return false;
+    }
+    
+    if (!/[0-9]/.test(formData.password)) {
+      setError("Password must contain at least one number");
+      return false;
+    }
+    
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      setError("Password must contain at least one special character (!@#$%^&* etc.)");
       return false;
     }
     
@@ -63,13 +146,11 @@ export default function Signup() {
       setError("");
       setSuccess("");
 
-      const API_URL = "http://localhost:5007"; // Changed to 5007 to match your backend
+      const API_URL = "http://localhost:5007";
       
       let response;
       
-      // Different endpoints for user and admin registration
       if (formData.role === "admin") {
-        // Admin registration
         response = await axios.post(`${API_URL}/api/auth/register-admin`, {
           name: formData.name,
           email: formData.email,
@@ -77,7 +158,6 @@ export default function Signup() {
           secretKey: formData.secretKey,
         });
       } else {
-        // User registration
         response = await axios.post(`${API_URL}/api/auth/register`, {
           name: formData.name,
           email: formData.email,
@@ -88,7 +168,6 @@ export default function Signup() {
       if (response.data.success) {
         if (formData.role === "admin") {
           setSuccess("Admin account created successfully! Redirecting to dashboard...");
-          // Store token for admin
           if (response.data.token) {
             localStorage.setItem("adminToken", response.data.token);
             localStorage.setItem("adminData", JSON.stringify(response.data.admin || response.data.data));
@@ -103,13 +182,20 @@ export default function Signup() {
           }, 2000);
         }
 
-        // Reset form
         setFormData({
           name: "",
           email: "",
           password: "",
           role: "user",
           secretKey: "",
+        });
+        setPasswordStrength({
+          hasMinLength: false,
+          hasUpperCase: false,
+          hasLowerCase: false,
+          hasNumber: false,
+          hasSpecialChar: false,
+          score: 0,
         });
       }
     } catch (error) {
@@ -118,7 +204,6 @@ export default function Signup() {
       if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else if (error.response?.data?.errors) {
-        // Handle validation errors
         const errors = error.response.data.errors;
         if (Array.isArray(errors)) {
           setError(errors[0].msg || "Validation failed");
@@ -134,6 +219,8 @@ export default function Signup() {
       setLoading(false);
     }
   };
+
+  const strengthInfo = getPasswordStrengthText();
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-blue-50 flex items-center justify-center px-4 py-10">
@@ -196,26 +283,94 @@ export default function Signup() {
               />
             </div>
 
-            {/* Password */}
-            <div className="relative py-2">
-              <LockIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Password (min 6 characters)"
-                className="w-full h-14 pl-12 pr-12 rounded-xl border border-gray-200 focus:border-[#0D47A1] outline-none focus:ring-2 focus:ring-[#0D47A1]/20 transition-all"
-                required
-                minLength="6"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
+            {/* Password with Strength Meter */}
+            <div className="py-2">
+              <div className="relative">
+                <LockIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Password (min 8 characters)"
+                  className="w-full h-14 pl-12 pr-12 rounded-xl border border-gray-200 focus:border-[#0D47A1] outline-none focus:ring-2 focus:ring-[#0D47A1]/20 transition-all"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              
+              {/* Password Strength Meter */}
+              {formData.password && (
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium">Password Strength:</span>
+                    <span className={`font-semibold ${strengthInfo.color}`}>
+                      {strengthInfo.text}
+                    </span>
+                  </div>
+                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-300 ${strengthInfo.bg}`}
+                      style={{ width: getPasswordStrengthWidth() }}
+                    />
+                  </div>
+                  
+                  {/* Password Requirements List */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 text-xs">
+                    <div className="flex items-center gap-2">
+                      {passwordStrength.hasMinLength ? 
+                        <CheckCircle size={14} className="text-green-500" /> : 
+                        <XCircle size={14} className="text-gray-300" />
+                      }
+                      <span className={passwordStrength.hasMinLength ? "text-green-600" : "text-gray-500"}>
+                        At least 8 characters
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {passwordStrength.hasUpperCase ? 
+                        <CheckCircle size={14} className="text-green-500" /> : 
+                        <XCircle size={14} className="text-gray-300" />
+                      }
+                      <span className={passwordStrength.hasUpperCase ? "text-green-600" : "text-gray-500"}>
+                        One uppercase letter (A-Z)
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {passwordStrength.hasLowerCase ? 
+                        <CheckCircle size={14} className="text-green-500" /> : 
+                        <XCircle size={14} className="text-gray-300" />
+                      }
+                      <span className={passwordStrength.hasLowerCase ? "text-green-600" : "text-gray-500"}>
+                        One lowercase letter (a-z)
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {passwordStrength.hasNumber ? 
+                        <CheckCircle size={14} className="text-green-500" /> : 
+                        <XCircle size={14} className="text-gray-300" />
+                      }
+                      <span className={passwordStrength.hasNumber ? "text-green-600" : "text-gray-500"}>
+                        One number (0-9)
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {passwordStrength.hasSpecialChar ? 
+                        <CheckCircle size={14} className="text-green-500" /> : 
+                        <XCircle size={14} className="text-gray-300" />
+                      }
+                      <span className={passwordStrength.hasSpecialChar ? "text-green-600" : "text-gray-500"}>
+                        One special character (!@#$%^&*)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Role Selection */}

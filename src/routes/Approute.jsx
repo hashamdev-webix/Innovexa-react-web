@@ -9,7 +9,6 @@ import Quote from "../pages/Quote";
 import Platform from "../pages/Platform";
 import Login from "../pages/Login";
 import InnovexaDashboard from "../dashboard/InnovexaDashboard";
-import SupportTicket from "../pages/SupportTicket";
 import Signup from "../pages/SignUp";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
@@ -117,7 +116,7 @@ export default function AppRoutes() {
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/quote" element={<Quote />} />
-      <Route path="/support-ticket" element={<SupportTicket />} />
+      
       
       {/* ============ AUTH ROUTES (Redirect if already logged in) ============ */}
       <Route 
